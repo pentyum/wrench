@@ -1,6 +1,9 @@
 package com.piggest.minecraft.bukkit.wrench;
 
+import java.util.Set;
+
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.type.*;
@@ -45,10 +48,12 @@ public class UseItem_listener implements Listener {
 					Block block = event.getClickedBlock();
 					if (direction_changeable(block)) {
 						Directional directional_data = (Directional) block.getBlockData();
-						if (player.isSneaking() == true) {
-							directional_data.setFacing(event.getBlockFace().getOppositeFace());
-						} else {
-							directional_data.setFacing(event.getBlockFace());
+						Set<BlockFace> available_faces = directional_data.getFaces();
+						BlockFace clicked_face = event.getBlockFace();
+						if (available_faces.contains(clicked_face.getOppositeFace()) && player.isSneaking() == true) {
+							directional_data.setFacing(clicked_face.getOppositeFace());
+						} else if (available_faces.contains(clicked_face)) {
+							directional_data.setFacing(clicked_face);
 						}
 						player.sendMessage("已使用扳手");
 						if (wrench_plugin.use_eco(player) == true) {
