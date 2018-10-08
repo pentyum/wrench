@@ -1,0 +1,22 @@
+name: wrench
+main: com.piggest.minecraft.bukkit.wrench.Wrench
+api-version: 1.13
+version: 0.0.1
+author: Pentyum
+commands:
+  wrench:
+    description: place water on your foot.
+    usage: /<command> to place water on your foot or /<command> setprice [world] to change price.
+    permission: wrench.use
+    permission-message: You don't have permission
+permissions:
+  wrench.*:
+    description: Gives access to all wrench commands
+    default: op
+  wrench.use:
+    description: Gives access to use wrench
+    default: true
+  wrench.changeprice:
+    description: change wrench price
+    default: op
+softdepend: [Vault]
