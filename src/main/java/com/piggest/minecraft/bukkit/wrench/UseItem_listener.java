@@ -45,6 +45,10 @@ public class UseItem_listener implements Listener {
 				ItemStack wrench_item = event.getItem();
 				if (wrench_item.isSimilar(wrench_plugin.get_wrench_item())) {
 					Player player = event.getPlayer();
+					if(!player.hasPermission("wrench.use")) {
+						player.sendMessage("你没有使用扳手的权限!");
+						return;
+					}
 					Block block = event.getClickedBlock();
 					if (direction_changeable(block)) {
 						Directional directional_data = (Directional) block.getBlockData();

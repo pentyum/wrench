@@ -6,6 +6,8 @@ import java.util.Iterator;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -49,11 +51,11 @@ public class Wrench extends JavaPlugin {
 	public void init_wrench_item() {
 		this.wrench_item = new ItemStack(Material.IRON_PICKAXE);
 		ItemMeta meta = wrench_item.getItemMeta();
-		meta.setDisplayName("扳手");
+		meta.setDisplayName("§r扳手");
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add("右键方块面使方");
-		lore.add("块正面转至该面");
-		lore.add("潜行状态下相反");
+		lore.add("§r右键方块使方块");
+		lore.add("§r正面转至该面");
+		lore.add("§r(潜行状态下相反)");
 		meta.setLore(lore);
 		this.wrench_item.setItemMeta(meta);
 	}
@@ -122,5 +124,49 @@ public class Wrench extends JavaPlugin {
 				}
 			}
 		}
+	}
+	
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		if (cmd.getName().equalsIgnoreCase("wrench")) {
+			if (args.length == 0) { // 没有参数
+				if (!(sender instanceof Player)) { // 如果sender与Player类不匹配
+					sender.sendMessage("这个指令只能让玩家使用。");
+				} else {
+					sender.sendMessage("合成扳手后右键使用(潜行状态相反)");
+				}
+				return true;
+			} else if (args[0].equalsIgnoreCase("setprice")) { // 设置价格
+				int newprice = 0;
+				String world_name = "world";
+				if (args.length == 3) {
+					world_name = args[1];
+				} else if (args.length == 2) {
+					if (!(sender instanceof Player)) { // 如果sender与Player类不匹配
+						sender.sendMessage("在控制台使用该命令必须指定世界名称");
+						return true;
+					} else {
+						Player player = (Player) sender;
+						world_name = player.getWorld().getName();
+					}
+				}
+				if (sender.hasPermission("wrench.changeprice")) {
+					try {
+						newprice = Integer.parseInt(args[args.length - 1]);
+					} catch (Exception e) {
+						sender.sendMessage("请输入整数");
+						return true;
+					}
+					price.set(world_name, newprice);
+					config.set("price", price);
+					saveConfig();
+					sender.sendMessage("价格设置成功");
+				} else {
+					sender.sendMessage("你没有权限设置价格");
+				}
+				return true;
+			}
+		}
+		return false;
 	}
 }

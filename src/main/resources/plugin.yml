@@ -5,8 +5,8 @@ version: 0.0.1
 author: Pentyum
 commands:
   wrench:
-    description: place water on your foot.
-    usage: /<command> to place water on your foot or /<command> setprice [world] to change price.
+    description: see the plugin info.
+    usage: /<command> to see the plugin info or /<command> setprice [world] to change price.
     permission: wrench.use
     permission-message: You don't have permission
 permissions:
